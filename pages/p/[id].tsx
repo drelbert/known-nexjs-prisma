@@ -1,37 +1,47 @@
-import React from "react"
-import { GetServerSideProps } from "next"
-import ReactMarkdown from "react-markdown"
-import Layout from "../../components/Layout"
-import { PostProps } from "../../components/Post"
+import React from "react";
+import { GetServerSideProps } from "next";
+import ReactMarkdown from "react-markdown";
+import Layout from "../../components/Layout";
+import { PostProps } from "../../components/Post";
+import prisma from "../../lib/prisma";
+import Router from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const post = {
-    id: 1,
-    title: "Prisma is the perfect ORM for Next.js",
-    content: "[Prisma](https://github.com/prisma/prisma) and Next.js go _great_ together!",
-    published: false,
-    author: {
-      name: "Nikolas Burk",
-      email: "burk@prisma.io",
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(params?.id) || -1,
     },
-  }
+    include: {
+      lead: {
+        select: { name: true },
+      },
+    },
+  });
   return {
     props: post,
-  }
-}
+  };
+};
 
 const Post: React.FC<PostProps> = (props) => {
-  let title = props.title
+  let title = props.title;
   if (!props.published) {
-    title = `${title} (Draft)`
+    title = `${title}`;
+  }
+
+  async function deletePost(id: number): Promise<void> {
+    await fetch(`http://localhost:3000/api/post/${id}`, {
+      method: "DELETE",
+    });
+    Router.push("/missionLaunch");
   }
 
   return (
     <Layout>
       <div>
         <h2>{title}</h2>
-        <p>By {props?.author?.name || "Unknown author"}</p>
+        <p>Lead {props?.lead?.name || "Unknown lead"}</p>
         <ReactMarkdown source={props.content} />
+        <button onClick={() => deletePost(props.id)}>Delete</button>
       </div>
       <style jsx>{`
         .page {
@@ -55,7 +65,7 @@ const Post: React.FC<PostProps> = (props) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Post
+export default Post;

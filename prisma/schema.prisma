@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  lead      Person? @relation(fields: [leadId], references: [id])
+  leadId    Int?
+  active    Boolean @default(false)
+  userId    Int?
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model Person {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  email       String @unique
+  status      String?
+  label       String?
+  connections String?
+  missions    Post[]
+  onMission   Boolean @default(false)
+
+  @@map(name: "people")
+}
+
+model Starship {
+  id            Int  @id @default(autoincrement())
+  name          String
+  model         String
+  manufacturer  String
+  crew          Int
+  passengers    Int
+  starshipClass String
+  pilots        String[]
+  ready         Boolean
+  launched      Boolean
+}

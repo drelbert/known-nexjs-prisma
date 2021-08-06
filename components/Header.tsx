@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Button from "./Button";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const Header: React.FC = () => {
     <div className="left">
       <Link href="/">
         <a className="bold" data-active={isActive("/")}>
-          Feed
+          known
         </a>
       </Link>
       <style jsx>{`
@@ -26,7 +27,6 @@ const Header: React.FC = () => {
         }
 
         .left a[data-active="true"] {
-          color: gray;
         }
 
         a + a {
@@ -36,7 +36,36 @@ const Header: React.FC = () => {
     </div>
   );
 
-  let right = null;
+  let right = (
+    <div className="right">
+      <Link href="/missionLaunch">
+        <Button>
+          <p>Missions</p>
+        </Button>
+      </Link>
+      <Link href="/createPerson">
+        <Button>
+          <a>Add Person</a>
+        </Button>
+      </Link>
+      <Link href="/people">
+        <Button>
+          <a>People</a>
+        </Button>
+      </Link>
+      <Link href="/testPage">
+        <Button>
+          <a>Test Page</a>
+        </Button>
+      </Link>
+
+      <style jsx>{`
+        .right {
+          margin-left: auto;
+        }
+      `}</style>
+    </div>
+  );
 
   return (
     <nav>

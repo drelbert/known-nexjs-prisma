@@ -1,4 +1,4 @@
-# Fullstack Authentication Example with Next.js and NextAuth.js
+# known build with: Fullstack with Next.js and Prisma
 
 # https://www.prisma.io/blog/backend-prisma-typescript-orm-with-postgresql-data-modeling-tsjs1ps7kip1
 

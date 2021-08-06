@@ -1,3 +1,3 @@
-# Fullstack Authentication Example with Next.js and NextAuth.js
+# known build with: Fullstack with Next.js and NextAuth.js
 
 

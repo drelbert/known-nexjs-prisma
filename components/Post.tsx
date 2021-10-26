@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Router from "next/router";
 
 export type PostProps = {
@@ -12,7 +12,7 @@ export type PostProps = {
   published: boolean;
 };
 
-const Post: React.FC<{ post: PostProps }> = ({ post }) => {
+const Post: FunctionComponent<{ post: PostProps }> = ({ post }) => {
   const leadName = post.lead ? post.lead.name : "Unknown lead";
 
   return (

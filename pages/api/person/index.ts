@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 
 export default async function handle(req, res) {
-  const { name, email, status, connections, onMission } = req.body;
+  const { name, email, status, connections, onMission, missions } = req.body;
 
   const result = await prisma.person.create({
     data: {
@@ -10,6 +10,7 @@ export default async function handle(req, res) {
       status: status,
       connections: connections,
       onMission: onMission,
+      missions: missions,
     },
   });
   res.json(result);

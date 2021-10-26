@@ -1,25 +1,31 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema file,
 
+// the datasource API block
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+
+// the generator API block
+// for indicating the assets to be created upon running the prisma generate command 
 generator client {
   provider = "prisma-client-js"
 }
+
+// the data model definitions
+// these map to tables on postgreSQL
 
 model Post {
   id        Int     @id @default(autoincrement())
   title     String
   content   String?
   published Boolean @default(false)
-  lead      Person? @relation(fields: [leadId], references: [id])
-  leadId    Int?
+  lead      Person @relation(fields: [leadId], references: [id])
+  leadId    Int  // relation scalar field, used in @relation attribute above.  This side of the relation stores the foreign key in the db
   active    Boolean @default(false)
-  userId    Int?
+  userId    Int?  
 }
 
 model User {

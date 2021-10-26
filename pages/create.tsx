@@ -1,18 +1,20 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
+import Layout from "../components/Layout";
 import Router from "next/router";
-import { Box } from "@chakra-ui/react";
-import { Formik, Field, Form } from "formik";
+import { GetStaticProps } from "next";
+import Lead, { LeadProps } from "../components/MissionLead";
+import prisma from "../lib/prisma";
 
-type Props = {
-  title: string;
-  content: string;
-  lead: string;
-};
+// function component
+const MissionCreate: FunctionComponent<Props> = function create(props) {
+  // creating the variables to manage state
+  // useState reutrns current state: person, title, etc...
+  // and function to update each as setPerson, setTitle, etc...
+  const [person, setPerson] = useState([]);
 
-export const MissionCreate: FunctionComponent<Props> = () => {
   const [title, setTitle] = useState("");
-  const [lead, setLead] = useState("");
   const [content, setContent] = useState("");
+  const [leadId, setLeadId] = useState(0);
 
   // the function to handle the data submission
   // passing the data from the react component to an API route
@@ -21,50 +23,70 @@ export const MissionCreate: FunctionComponent<Props> = () => {
     e.preventDefault();
 
     try {
-      const body = { title, lead, content };
+      const body = { title, content, leadId };
+      // calling the api route to create a mission
       await fetch("/api/post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      await Router.reload();
+      await Router.push("/missions");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const initialValues = { title: "", content: "", lead: "" };
   return (
-    <Box m="25px" borderWidth="5px" borderRadius="lg" p="5px">
-      <Formik initialValues={initialValues} onSubmit={submitData}>
-        <Form>
-          <h1>New Mission</h1>
+    <Layout>
+      <div>
+        <form onSubmit={submitData}>
+          <h1>Add Mission</h1>
           <input
             autoFocus
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
+            placeholder="Add Mission Title"
             type="text"
             value={title}
           />
-          <select onChange={(e) => setLead(e.target.value)} value={lead}>
-            <option value="Luke">Luke</option>
-            <option value="Han">Han</option>
-          </select>
-          <textarea
-            cols={50}
+          <input
+            autoFocus
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Content"
-            rows={4}
+            placeholder="Add Objective"
+            type="text"
             value={content}
           />
+
+          <select onChange={() => setLeadId(0)}>
+            <option>Choose Lead</option>
+            {props.leads.map((lead) => (
+              <option key={lead.id}>
+                <Lead lead={lead} {...lead} />
+              </option>
+            ))}
+          </select>
+
           <input disabled={!content || !title} type="submit" value="Create " />
           <a className="back" href="#" onClick={() => Router.reload()}>
             or Cancel
           </a>
-        </Form>
-      </Formik>
-    </Box>
+        </form>
+      </div>
+    </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps = async function getLeads() {
+  const leads = await prisma.person.findMany({
+    include: { missions: true },
+  });
+
+  console.log(leads);
+
+  return { props: { leads } };
+};
+
+type Props = {
+  leads: LeadProps[];
 };
 
 export default MissionCreate;

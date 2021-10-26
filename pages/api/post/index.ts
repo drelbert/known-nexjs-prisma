@@ -1,19 +1,39 @@
-import { id } from "date-fns/locale";
 import prisma from "../../../lib/prisma";
 
 // handle POST incoming on the  /api/post
 export default async function handle(req, res) {
-  // object destructuring title and content
-  const { title, lead, content } = req.body;
-  // using the prisma client to create a new post in the db
-  const result = await prisma.post.create({
+  const personId = req.query.id;
+  // object destructuring
+  const { title, content, id, email } = req.body;
+  // using nested writes/adding new related record(post) to existing record(person)
+  const result = await prisma.person.update({
+    where: {
+      id: Number(personId),
+    },
     data: {
-      title: title,
-      // lead: {
-      //   connect: { id: 4 },
-      // },
-      content: content,
+      missions: {
+        create: {
+          title: title,
+          content: content,
+        },
+      },
     },
   });
+  //delete or use
+  // data: {
+  //   title: title,
+  //   content: content,
+  //   published: published,
+  //   lead: {
+  //   connect: {
+  //   id: 3,
+  //   email: email,
+  //   },
+  //   },
+  //   },
+  //   include: {
+  //   lead: true,
+  //   },
+
   res.json(result);
 }

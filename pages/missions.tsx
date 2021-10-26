@@ -1,11 +1,9 @@
-import React from "react";
-import { format, formatDistanceStrict, formatDistanceToNow } from "date-fns";
+import React, { FunctionComponent } from "react";
 import { GetServerSideProps } from "next";
 import prisma from "../lib/prisma";
 import Layout from "../components/Layout";
 import { Flex, Box } from "@chakra-ui/react";
 import Post, { PostProps } from "../components/Post";
-import PostCreate from "./create";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const feed = await prisma.post.findMany({
@@ -20,29 +18,9 @@ type Props = {
   feed: PostProps[];
 };
 
-const now = new Date();
-const dueDate = new Date(now.getFullYear(), 3, 1, 0, 0, 0);
-const reqDate = new Date(now.getFullYear(), 2, 1, 0, 0, 0);
-
-const MissionLaunch: React.FC<Props> = (props) => {
+const Missions: FunctionComponent<Props> = function missions(props) {
   return (
     <Layout>
-      <div>
-        <p>
-          Due date is : {""}
-          {formatDistanceStrict(dueDate, now, {
-            unit: "day",
-          })}
-          {" from today"}
-        </p>
-        <p>
-          Requested date was: {""}
-          {formatDistanceStrict(reqDate, now, {
-            unit: "day",
-          })}
-          {" ago"}
-        </p>
-      </div>
       <h1>Current Missions </h1>
       <Flex
         flexWrap="wrap"
@@ -62,10 +40,9 @@ const MissionLaunch: React.FC<Props> = (props) => {
             <Post post={post} />
           </Box>
         ))}
-        <PostCreate />
       </Flex>
     </Layout>
   );
 };
 
-export default MissionLaunch;
+export default Missions;

@@ -2,20 +2,6 @@ import React, { useState, useEffect, FunctionComponent } from "react";
 import { GetServerSideProps, GetStaticProps } from "next";
 import { Alert, AlertIcon, Box } from "@chakra-ui/react";
 import { formatDistanceStrict, addBusinessDays, setDate } from "date-fns";
-import Starship, { StarshipProps } from "./StarshipDetails";
-
-export const getStaticProps: GetStaticProps = async () => {
-  const launchData = [
-    {
-      id: 2,
-      name: "Millennium Falcon",
-      model: "YT-1300 light freighter",
-      pilots: ["Chewbacca", "Han Solo", "Lando Calrissian", "Nien Nunb"],
-      launchDate: "March 26, 2021",
-    },
-  ];
-  return { props: { launchData } };
-};
 
 type Props = {
   //name: string;

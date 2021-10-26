@@ -32,7 +32,7 @@ const Post: React.FC<PostProps> = (props) => {
     await fetch(`http://localhost:3000/api/post/${id}`, {
       method: "DELETE",
     });
-    Router.push("/missionLaunch");
+    Router.push("/missions");
   }
 
   return (

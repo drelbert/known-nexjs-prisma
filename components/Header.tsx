@@ -38,7 +38,12 @@ const Header: React.FC = () => {
 
   let right = (
     <div className="right">
-      <Link href="/missionLaunch">
+      <Link href="/create">
+        <Button>
+          <a>Add Mission</a>
+        </Button>
+      </Link>
+      <Link href="/missions">
         <Button>
           <p>Missions</p>
         </Button>

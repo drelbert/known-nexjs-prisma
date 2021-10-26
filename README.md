@@ -1,5 +1,7 @@
 # known build with: Fullstack with Next.js and Prisma
 
+# https://vercel.com/guides/nextjs-prisma-postgres
+
 # https://www.prisma.io/blog/backend-prisma-typescript-orm-with-postgresql-data-modeling-tsjs1ps7kip1
 
 # https://github.com/leerob/next-prisma
@@ -17,7 +19,8 @@ check when deadline due (use in the missionLaunchPage)
 # https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Checking_when_a_deadline_is_due
 
 examples
-https://github.com/vercel/next.js/tree/canary/examples
+
+# https://github.com/vercel/next.js/tree/canary/examples
 
 1. Build
    [`steps`] (https://vercel.com/guides/nextjs-prisma-postgres)
@@ -43,13 +46,37 @@ npx prisma migrate dev --preview-feature
 prisma studio
 npx prisma studio
 
+1. relations
+   is a connection between 2 models in a Prisma schema
+
+   two models: Post and Person
+   have two relation fields: Post/lead and Person/missions: Post[]
+   the scalar leadId is the foreign key
+
+   define a connection between the models
+   scalar fields indicated by @relation attribute
+
+2. types of relations
+   three
+   1 - 1 = Person <-> Profile
+   1 - n = Person <-> Mission(s)
+   m - n = Mission <-> Category
+
+3. terminology
+   relation fields
+   model Person = relation field, note no scalar type
+   missions Post [] = type is another model
+
+4. relation queries from prisma client docs
+   nested writes
+
 # State Management Details (from S Kinney)
 
 - Hooks state
 
   - parent component state is the child component props
     - user list: parent - has state as users are added or deleted
-      but and individual user: child - gets state from the higher component
+      but an individual user: child - gets state from the higher component
 
 - State and objects
 
@@ -85,21 +112,36 @@ return {...mission}, active: !mission.active };
 )
 }
 
-# Testing
-
-- unit testing
-
-- Jest
-
-- guidelines
-  approach the test from a user perspective
-  do not test implementation details
-
-  to determine what to test
-  ask
-  what are the important aspects of the app
-
 ## edited babel content
 
 "@babel/preset-react": "7.12.13",
 "@babel/plugin-transform-react-jsx": "7.14.5"
+
+## user stories
+
+# add mission with a lead from the person list
+
+- use GetServerSideProps and prisma to get person name, email, missions, and id
+
+- use a functional component to create the mission using useState
+
+- create input elements to handle title and content
+- build the select element for choosing a person by name and id
+
+- update the person.mission array
+
+working
+fetch array of person objects
+rendering the name and id
+
+add mission with title and content and id: hard coded
+
+not working
+initial page renders with array of [object,Object]
+
+adding mission with title, content and dynamic lead/id value(use data injected to dropdown)
+
+message:
+Warning: Only strings and numbers are supported as <option> children.
+
+# pick up point

@@ -2,13 +2,12 @@ import prisma from "../../../lib/prisma";
 
 // handle POST incoming on the  /api/post
 export default async function handle(req, res) {
-  const personId = req.query.id;
   // object destructuring
-  const { title, content, id, email } = req.body;
+  const { title, content, id } = req.body;
   // using nested writes/adding new related record(post) to existing record(person)
   const result = await prisma.person.update({
     where: {
-      id: Number(personId),
+      id: id,
     },
     data: {
       missions: {

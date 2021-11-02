@@ -1,20 +1,21 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import Router from "next/router";
-import { GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import Lead, { LeadProps } from "../components/MissionLead";
 import prisma from "../lib/prisma";
+import People from "./people";
+import { number } from "yup/lib/locale";
 
 // function component
 const MissionCreate: FunctionComponent<Props> = function create(props) {
   // creating the variables to manage state
-  // useState reutrns current state: person, title, etc...
-  // and function to update each as setPerson, setTitle, etc...
-  const [person, setPerson] = useState([]);
+  // useState reutrns current state: ttile, content, etc...
+  // and function to update each as setTitle, setLead, etc...
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [leadId, setLeadId] = useState(0);
+  const [id, setPersonId] = useState(props.data);
 
   // the function to handle the data submission
   // passing the data from the react component to an API route
@@ -23,7 +24,7 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
     e.preventDefault();
 
     try {
-      const body = { title, content, leadId };
+      const body = { title, content, id };
       // calling the api route to create a mission
       await fetch("/api/post", {
         method: "POST",
@@ -56,11 +57,12 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
             value={content}
           />
 
-          <select onChange={() => setLeadId(0)}>
-            <option>Choose Lead</option>
-            {props.leads.map((lead) => (
+          <select onChange={() => setPersonId(props.data)}>
+            <option>Data does not render on initial page load</option>
+
+            {props.data.map((lead) => (
               <option key={lead.id}>
-                <Lead lead={lead} {...lead} />
+                <Lead lead={lead} />
               </option>
             ))}
           </select>
@@ -70,23 +72,39 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
             or Cancel
           </a>
         </form>
+
+        <h3>Data rendering on page load</h3>
+        {props.data.map((lead) => (
+          <ul key={lead.id}>
+            {" "}
+            <Lead lead={lead} />{" "}
+          </ul>
+        ))}
       </div>
     </Layout>
   );
 };
 
-export const getStaticProps: GetStaticProps = async function getLeads() {
-  const leads = await prisma.person.findMany({
-    include: { missions: true },
+export default MissionCreate;
+
+export const getStaticProps: GetStaticProps = async function getLeads({
+  params,
+}) {
+  const data = await prisma.person.findMany({
+    where: { id: Number(params.id) },
+    include: {
+      missions: {
+        select: { title: true },
+      },
+    },
   });
 
-  console.log(leads);
-
-  return { props: { leads } };
+  console.log(`array of people objects`);
+  console.log(JSON.stringify(data));
+  // returning props with the object
+  return { props: { data } };
 };
 
 type Props = {
-  leads: LeadProps[];
+  data: LeadProps[];
 };
-
-export default MissionCreate;

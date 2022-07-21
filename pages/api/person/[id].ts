@@ -1,13 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
-// let hasMission = true || false;
-
-// function updateOnMission() {
-//   // using boolean
-//   return (hasMission = !hasMission);
-// }
-
 async function handleDELETE(personId, res) {
   const person = await prisma.person.delete({
     where: { id: Number(personId) },

@@ -4,8 +4,6 @@ import Router from "next/router";
 import { GetServerSideProps, GetStaticProps } from "next";
 import Lead, { LeadProps } from "../components/MissionLead";
 import prisma from "../lib/prisma";
-import People from "./people";
-import { number } from "yup/lib/locale";
 
 // function component
 const MissionCreate: FunctionComponent<Props> = function create(props) {
@@ -15,13 +13,14 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [id, setPersonId] = useState(props.data);
+  const [id, setPersonId] = useState(props.id);
 
   // the function to handle the data submission
   // passing the data from the react component to an API route
   // that handles the data persistence to the db
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    props.data;
 
     try {
       const body = { title, content, id };
@@ -57,7 +56,7 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
             value={content}
           />
 
-          <select onChange={() => setPersonId(props.data)}>
+          <select onChange={() => setPersonId(props.id)} value={id}>
             <option>Data does not render on initial page load</option>
 
             {props.data.map((lead) => (
@@ -87,24 +86,23 @@ const MissionCreate: FunctionComponent<Props> = function create(props) {
 
 export default MissionCreate;
 
-export const getStaticProps: GetStaticProps = async function getLeads({
-  params,
-}) {
+export const getStaticProps: GetStaticProps = async function getLeads(id) {
   const data = await prisma.person.findMany({
-    where: { id: Number(params.id) },
-    include: {
-      missions: {
-        select: { title: true },
-      },
-    },
+    // where: { id: Number(3) },
+    // include: {
+    //   missions: {
+    //     select: { title: true },
+    //   },
+    // },
   });
 
-  console.log(`array of people objects`);
-  console.log(JSON.stringify(data));
+  console.log(`array of objects...`);
+  console.log(data);
   // returning props with the object
   return { props: { data } };
 };
 
 type Props = {
+  id: number;
   data: LeadProps[];
 };

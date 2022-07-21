@@ -1,5 +1,15 @@
 ## known: built with Next.js and Prisma
 
+1. Build
+   [`steps`] (https://vercel.com/guides/nextjs-prisma-postgres)
+
+- repo
+  [`final`](https://github.com/prisma/blogr-nextjs-prisma/tree/final)
+
+## run
+
+npm run dev
+
 ### Prisma
 
 added prisma cli
@@ -42,28 +52,6 @@ npx prisma studio
 4. relation queries from prisma client docs
    nested writes
 
-### State Management Details (from S Kinney)
-
-- Hooks state
-
-  - parent component state is the child component props
-    - user list: parent - has state as users are added or deleted
-      but an individual user: child - gets state from the higher component
-
-- State and objects
-
-  - from useReducer introduction video
-
-  - React state needs immutable onjects
-  - set state -> React asks - is this different from last time?
-  - when an object or array is mutated, there is the same reference in memory
-
-    - even where there are different keys:values
-
-    React cannot tell if the obj or array is different
-
-  - therefore a new obj or array needs to be returned
-
 ### illustration
 
 const addMission = mission => {
@@ -96,6 +84,26 @@ add mission with title, content and lead (from select)
 error message:
 Warning: Only strings and numbers are supported as <option> children.
 
-view launch date in dashboard view
-
 ### pick up point
+
+# https://vercel.com/guides/nextjs-prisma-postgres
+
+# https://www.prisma.io/blog/backend-prisma-typescript-orm-with-postgresql-data-modeling-tsjs1ps7kip1
+
+# https://github.com/leerob/next-prisma
+
+# https://www.youtube.com/watch?v=FMnlyi60avU
+
+# https://www.youtube.com/watch?v=Bqacj0iOL68
+
+# https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nextjs-api-routes
+
+# https://blog.logrocket.com/building-a-next-js-shopping-cart-app/
+
+check when deadline due (use in the missionLaunchPage)
+
+# https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Checking_when_a_deadline_is_due
+
+examples
+
+# https://github.com/vercel/next.js/tree/canary/examples
